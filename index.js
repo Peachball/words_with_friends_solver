@@ -123,8 +123,6 @@ function wordChecker(wordArray , boardArray) {
 };
 
 function possibilityChecker(square , x , y) {
-	var side = false;
-	var possiblity = false;
 	var adjacentSquares = [boardArray[y - 1][x] , boardArray[y + 1][x] , boardArray[y][x - 1] , boardArray[y][x + 1]];
 	if (y - 1 < 0) {
 		adjacentSquares[0] = "";
@@ -137,8 +135,11 @@ function possibilityChecker(square , x , y) {
 	}
 	for (var i = 0 ; i < adjacentSquares.length ; i++) {
 		if (adjacentSquares[i] !== "") {
-			return possibility;
-			i = adjacentSquares.length;
+			return true;
 		}
 	}
+	return false;
+};
+
+function buildAWord() {
 };
