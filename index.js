@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				reader.onload = function(e) {
 					output = e.target.result;
 				};
-				reader.readAsText(WORD_LOCATION);
+				// reader.readAsText(WORD_LOCATION);
 				console.log(output[0]);
 			}()
 		},
@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					if (this.rack[i][0] > 'z' || this.rack[i][0] < 'a') {
 						alert("Invalid rack at position " + i.toString());
 						return;
+						
 					}
 				}
 				for (var r = 0; r < BOARD_SIZE; r++) {
