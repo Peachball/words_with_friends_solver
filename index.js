@@ -85,3 +85,34 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 	});
 });
+
+
+
+
+
+
+
+
+
+
+
+
+function wordChecker(wordArray , boardArray) {
+	for (var y = 0 ; y < boardArray.length ; y++) {
+		for (var x = 0 ; x < boardArray[0].length ; x++) {
+			var square = boardArray[y][x];
+			var side = false;
+			var possiblity = false;
+			if (y - 1 < 0 || x - 1 < 0 || y + 1 > boardArray.length || x + 1 > boardArray[0].length) {
+				side = true;
+			} else {
+				var adjacentSquares = [boardArray[y - 1][x] , boardArray[y + 1][x] , boardArray[y][x - 1] , boardArray[y][x + 1]];
+				for (var i = 0 ; i < adjacentSquares.length ; i++) {
+					if (adjacentSquares[i] !== "" &&) {
+						possibility = true;
+					}
+				}
+			}
+		}
+	}
+};
