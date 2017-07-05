@@ -141,5 +141,5 @@ function possibilityChecker(square , x , y) {
 	return false;
 };
 
-function buildAWord() {
+function buildAWordArray() {
 };
