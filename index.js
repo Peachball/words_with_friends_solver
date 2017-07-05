@@ -112,24 +112,33 @@ function checkIfWordExists(word, wordArray) {
 
 
 
-
-
 function wordChecker(wordArray , boardArray) {
 	for (var y = 0 ; y < boardArray.length ; y++) {
 		for (var x = 0 ; x < boardArray[0].length ; x++) {
 			var square = boardArray[y][x];
-			var side = false;
-			var possiblity = false;
-			if (y - 1 < 0 || x - 1 < 0 || y + 1 > boardArray.length || x + 1 > boardArray[0].length) {
-				side = true;
-			} else {
-				var adjacentSquares = [boardArray[y - 1][x] , boardArray[y + 1][x] , boardArray[y][x - 1] , boardArray[y][x + 1]];
-				for (var i = 0 ; i < adjacentSquares.length ; i++) {
-					if (adjacentSquares[i] !== "" &&) {
-						possibility = true;
-					}
-				}
-			}
+			var possibility = possibilityChecker(square , x , y);
+			console.log(possibility);
 		}
 	}
 };
+
+function possibilityChecker(square , x , y) {
+	var side = false;
+	var possiblity = false;
+	var adjacentSquares = [boardArray[y - 1][x] , boardArray[y + 1][x] , boardArray[y][x - 1] , boardArray[y][x + 1]];
+	if (y - 1 < 0) {
+		adjacentSquares[0] = "";
+	} else if (y + 1 > boardArray.length) {
+		adjacentSquares[1] = "";
+	} else if (x - 1 < 0) {
+		adjacentSquares[2] = "";
+	} else if (x + 1 > boardArray[0].length) {
+		adjacentSquares[3] = "";
+	}
+	for (var i = 0 ; i < adjacentSquares.length ; i++) {
+		if (adjacentSquares[i] !== "") {
+			return possibility;
+			i = adjacentSquares.length;
+		}
+	}
+}
