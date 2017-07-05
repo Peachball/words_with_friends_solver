@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				// beginning of solving process
 				this.readOnlyMode = true;
-				wordChecker(this.wordlist, this.board);
+				wordChecker(this.wordlist, this.board, this.rack);
 			},
 			clearSolve: function() {
 				this.readOnlyMode = false;
@@ -127,20 +127,14 @@ function wordChecker(wordArray , boardArray , tilesArray) {
 };
 
 function possibilityChecker(square , boardArray) {
-	var adjacentSquares = [boardArray[square.y - 1][square.x] ,
-	boardArray[square.y + 1][square.x] , boardArray[square.y][square.x - 1] ,
-	boardArray[square.y][square.x + 1]];
-	if (square.y - 1 < 0) {
-		adjacentSquares[0] = "";
-	} else if (square.y + 1 > boardArray.length) {
-		adjacentSquares[1] = "";
-	} else if (square.x - 1 < 0) {
-		adjacentSquares[2] = "";
-	} else if (square.x + 1 > boardArray[0].length) {
-		adjacentSquares[3] = "";
-	}
-	for (var i = 0 ; i < adjacentSquares.length ; i++) {
-		if (adjacentSquares[i] !== "") {
+	var dx = [-1, 0, 0, 1];
+	var dy = [0, -1, 1, 0];
+	var possible = false;
+	for (var i = 0; i < 4; i++) {
+		var newX = square.x + dx[i];
+		var newY = square.y + dy[i];
+		if (!(newX < 0 || newX >= boardArray[0].length || newY < 0 ||
+		newY >= boardArray.length) && boardArray[newY][newX] !== "") {
 			return true;
 		}
 	}
@@ -160,4 +154,7 @@ function offBoardTileCheck(x , y) {
 };
 
 function buildAWordArray(square , boardArray , tilesArray) {
+	// Takes a square
+	// Puts letters in one direction away from it
+	// Returns array
 };
