@@ -126,4 +126,4 @@ function possibilityChecker(square , x , y) {
 			i = adjacentSquares.length;
 		}
 	}
-}
+};
