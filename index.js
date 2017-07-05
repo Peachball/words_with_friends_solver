@@ -27,13 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			readOnlyMode: false,
 			tempBoard: [],
 			wordlist: function() {
-				var output = "";
-				var reader = new FileReader();
-				reader.onload = function(e) {
-					output = e.target.result;
-				};
-				// reader.readAsText(WORD_LOCATION);
-				console.log(output[0]);
+				var output = "hi";
+				$.get({
+					url: 'words.txt',
+					success: function(data) {
+						output = data;
+					},
+					async: false
+				});
+				return output;
 			}()
 		},
 		methods: {
