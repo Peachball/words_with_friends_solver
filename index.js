@@ -112,25 +112,33 @@ function checkIfWordExists(word, wordArray) {
 
 
 
-function wordChecker(wordArray , boardArray) {
+function wordChecker(wordArray , boardArray , tilesArray) {
 	for (var y = 0 ; y < boardArray.length ; y++) {
 		for (var x = 0 ; x < boardArray[0].length ; x++) {
-			var square = boardArray[y][x];
-			var possibility = possibilityChecker(square , x , y);
-			console.log(possibility);
+			var square = {
+				value : boardArray[y][x],
+				x : x,
+				y : y
+			};
+			var possibility = possibilityChecker(square , boardArray);
+			if (possibility == true) {
+				buildAWordArray(square , boardArray , tilesArray);
+			}
 		}
 	}
 };
 
-function possibilityChecker(square , x , y) {
-	var adjacentSquares = [boardArray[y - 1][x] , boardArray[y + 1][x] , boardArray[y][x - 1] , boardArray[y][x + 1]];
-	if (y - 1 < 0) {
+function possibilityChecker(square , boardArray) {
+	var adjacentSquares = [boardArray[square.y - 1][square.x] ,
+	boardArray[square.y + 1][square.x] , boardArray[square.y][square.x - 1] ,
+	boardArray[square.y][square.x + 1]];
+	if (square.y - 1 < 0) {
 		adjacentSquares[0] = "";
-	} else if (y + 1 > boardArray.length) {
+	} else if (square.y + 1 > boardArray.length) {
 		adjacentSquares[1] = "";
-	} else if (x - 1 < 0) {
+	} else if (square.x - 1 < 0) {
 		adjacentSquares[2] = "";
-	} else if (x + 1 > boardArray[0].length) {
+	} else if (square.x + 1 > boardArray[0].length) {
 		adjacentSquares[3] = "";
 	}
 	for (var i = 0 ; i < adjacentSquares.length ; i++) {
@@ -141,5 +149,17 @@ function possibilityChecker(square , x , y) {
 	return false;
 };
 
-function buildAWordArray() {
+function offBoardTileCheck(x , y) {
+	if (y - 1 < 0) {
+		return true;
+	} else if (y + 1 > boardArray.length) {
+		return true;
+	} else if (x - 1 < 0) {
+		return true;
+	} else if (x + 1 > boardArray[0].length) {
+		return true;
+	}
+};
+
+function buildAWordArray(square , boardArray , tilesArray) {
 };
