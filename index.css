@@ -1,0 +1,35 @@
+.highlighted {
+	border: solid yellow;
+}
+
+.row {
+	float: left;
+}
+
+.sqr {
+	height: 30px;
+	width: 30px;
+	font-weight: normal;
+}
+
+.rack {
+	width: 50px;
+	height: 50px;
+}
+
+.error {
+	color red;
+}
+
+button {
+	width: 70px;
+	height: 70px;
+}
+
+ul {
+	list-style-type: none;
+}
+
+.empty {
+	background: black;
+}

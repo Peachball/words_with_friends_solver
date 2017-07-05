@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Cheat on Words with Friends! </title>
+		<link rel="stylesheet" href="index.css">
+		<!-- jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+		</script>
+		<!-- Vue JS -->
+		<script src="https://unpkg.com/vue"></script>
+		<script src="index.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<h1> Board </h1>
+			<table class="board-container">
+				<tr v-for="(row, rindex) in board">
+					<th v-for="(c, cindex) in row">
+						<input v-model="board[rindex][cindex]" type="text" class="sqr"
+								 v-bind:class="{empty: board[rindex][cindex].length == 0}"
+								 v-bind:readonly="readOnlyMode"></input>
+
+					</th>
+				</tr>
+			</table>
+			<h1> Rack </h1>
+			<ul>
+				<li v-for="(c, index) in rack" class="row">
+					<input v-model="rack[index]" type="text" class="rack"
+								v-bind:class="{empty: rack[index].length == 0}"
+								v-bind:readonly="readOnlyMode"></input>
+				</li>
+			</ul>
+
+			<button @click="solve()"> Solve! </button>
+			<button @click="clearSolve()"> Clear Solve </button>
+			<button @click="reset"> Reset Board </button>
+			<p class="error"> {{error}} </p>
+		</div>
+	</body>
+</html>
