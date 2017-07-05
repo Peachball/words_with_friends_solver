@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			}(),
 			error: "",
 			readOnlyMode: false,
-			tempBoard: [],
 			wordlist: function() {
 				var output = "hi";
 				$.get({
@@ -40,8 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 		methods: {
 			solve: function() {
-				// beginning of solving process
-				this.readOnlyMode = true;
 				// Verify inputs
 				for (var i = 0; i < RACK_SIZE; i++) {
 					if (this.rack[i].length != 1) {
@@ -60,14 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				for (var r = 0; r < BOARD_SIZE; r++) {
 					for (var c = 0; c < BOARD_SIZE; c++) {
-						if (board[r][c].length > 1) {
+						if (this.board[r][c].length > 1) {
 							alert("Invalid board at position:"
 								+ r.toString() + "," + c.toString());
 							return;
 						}
-						if (board[r][c].length == 1) {
-							board[r][c] = board[r][c].toLowerCase();
-							if (board[r][c] > 'z' || board[r][c] < 'a') {
+						if (this.board[r][c].length == 1) {
+							this.board[r][c] = this.board[r][c].toLowerCase();
+							if (this.board[r][c] > 'z' || this.board[r][c] < 'a') {
 								alert("Invalid board at position:"
 									+ r.toString() + "," + c.toString());
 								return;
@@ -77,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				// beginning of solving process
 				this.readOnlyMode = true;
+				wordChecker(this.wordlist, this.board);
 			},
 			clearSolve: function() {
 				this.readOnlyMode = false;
@@ -100,10 +98,10 @@ function checkIfWordExists(word, wordArray) {
 			return true;
 		}
 		else if (tempWord < word) {
-			l = m;
+			l = m + 1;
 		}
 		else {
-			h = m;
+			h = m - 1;
 		}
 	}
 	return false;
