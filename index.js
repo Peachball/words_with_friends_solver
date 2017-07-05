@@ -91,8 +91,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
+function checkIfWordExists(word, wordArray) {
+	var l = 0, h = wordArray.length - 1;
+	while (l <= h) {
+		var m = (h + l) / 2;
+		var tempWord = wordArray[m];
+		if (tempWord === word) {
+			return true;
+		}
+		else if (tempWord < word) {
+			l = m;
+		}
+		else {
+			h = m;
+		}
+	}
+	return false;
+}
 
 
 
