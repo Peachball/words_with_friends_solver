@@ -120,7 +120,10 @@ function wordChecker(wordArray , boardArray , tilesArray) {
 			};
 			var possibility = possibilityChecker(square , boardArray);
 			if (possibility == true) {
-				buildAWordArray(square , boardArray , tilesArray);
+				var setOfWords = buildAWordArray(square , boardArray , tilesArray);
+			}
+			for (var i = 0 ; i < setOfWords.length ; i++) {
+				console.log(checkIfWordExists(setOfWords[i] , wordArray));
 			}
 		}
 	}
