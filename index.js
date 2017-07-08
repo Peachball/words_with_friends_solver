@@ -123,7 +123,9 @@ function wordChecker(wordArray , boardArray , tilesArray) {
 				var setOfWords = buildAWordArray(square , boardArray , tilesArray);
 			}
 			for (var i = 0 ; i < setOfWords.length ; i++) {
-				console.log(checkIfWordExists(setOfWords[i] , wordArray));
+				if (checkIfWordExists(setOfWords[i] , wordArray)) {
+					console.log(setOfWords[i] + " is playable");
+				}
 			}
 		}
 	}
