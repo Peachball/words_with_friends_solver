@@ -1,0 +1,23 @@
+{
+  "name": "wordwithfriendbot",
+  "version": "0.0.1",
+  "description": "Beat words with friends easily",
+  "main": "index.js",
+  "dependencies": {
+    "check-word": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peachball/words_with_friends_solver.git"
+  },
+  "author": "Peachball",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Peachball/words_with_friends_solver/issues"
+  },
+  "homepage": "https://github.com/Peachball/words_with_friends_solver#readme"
+}
