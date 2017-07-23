@@ -2,9 +2,7 @@ const RACK_SIZE = 7;
 const BOARD_SIZE = 11;
 const WORD_LOCATION = "words.txt";
 
-var check_word = require('check-word'),
-	words = check_word('en'),
-	trie = require('trie-prefix-tree');
+var trie = require('trie-prefix-tree');
 var dict = trie();
 
 document.addEventListener('DOMContentLoaded', function() {
