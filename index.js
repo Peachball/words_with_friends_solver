@@ -3,7 +3,9 @@ const BOARD_SIZE = 11;
 const WORD_LOCATION = "words.txt";
 
 var check_word = require('check-word'),
-	words = check_word('en');
+	words = check_word('en'),
+	trie = require('trie-prefix-tree');
+var dict = trie();
 
 document.addEventListener('DOMContentLoaded', function() {
 	var app = new Vue({
@@ -66,7 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				// beginning of solving process
 				this.readOnlyMode = true;
-				wordChecker(this.board, this.rack);
+				var boardClone = JSON.parse(JSON.stringify(this.board));
+				var rackClone = JSON.parse(JSON.stringify(this.rack));
+				wordChecker(boardClone, rackClone);
 			},
 			clearSolve: function() {
 				this.readOnlyMode = false;
@@ -78,19 +82,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
-
-
 function wordChecker(boardArray, tilesArray) {
-	for (var y = 0 ; y < boardArray.length ; y++) {
-		for (var x = 0 ; x < boardArray[0].length ; x++) {
-			var square = {
-				value : boardArray[y][x],
-				x : x,
-				y : y
-			};
-			var possibility = possibilityChecker(square , boardArray);
-			if (possibility == true) {
-				var setOfWords = buildAWordArray(square , boardArray , tilesArray);
+	for (var r = 0 ; r < boardArray.length ; r++) {
+		for (var c = 0 ; c < boardArray[0].length ; c++) {
+			var possibility = possibilityChecker(r, c, boardArray);
+			var possibleWords = [];
+			if (possibility.horizontal) {
+				buildAWordArray(r, c, boardArray, tilesArray, possibleWords,
+					"h");
+			}
+			if (possibility.vertical) {
+				buildAWordArray(r, c, boardArray, tilesArray, possibleWords,
+					"v");
 			}
 			for (var i = 0 ; i < setOfWords.length ; i++) {
 				if (words.check(setOfWords[i])) {
@@ -99,22 +102,26 @@ function wordChecker(boardArray, tilesArray) {
 			}
 		}
 	}
-};
+}
 
-function possibilityChecker(square , boardArray) {
-	var dx = [-1, 0, 0, 1];
-	var dy = [0, -1, 1, 0];
-	var possible = false;
-	for (var i = 0; i < 4; i++) {
-		var newX = square.x + dx[i];
-		var newY = square.y + dy[i];
-		if (!(newX < 0 || newX >= boardArray[0].length || newY < 0 ||
-		newY >= boardArray.length) && boardArray[newY][newX] !== "") {
-			return true;
+function possibilityChecker(r, c, boardArray) {
+	var R = boardArray.length;
+	var W = boardArray[0].length;
+	var p = {horizontal: false, vertical: false};
+	for (var dr = 0; dr + r < R && dr < 7; r++) {
+		if (boardArray[r + dr][c] != '') {
+			p.horizontal = true;
+			break;
 		}
 	}
-	return false;
-};
+	for (var dc = 0; dc + c < W; c++) {
+		if (boardArray[r][c + dc] != '') {
+			p.vertical = true;
+			break;
+		}
+	}
+	return p;
+}
 
 function offBoardTileCheck(x , y) {
 	if (y - 1 < 0) {
@@ -126,10 +133,46 @@ function offBoardTileCheck(x , y) {
 	} else if (x + 1 > boardArray[0].length) {
 		return true;
 	}
-};
+}
 
-function buildAWordArray(square , boardArray , tilesArray) {
+
+function buildAWordArray(r, c, boardArray, tilesArray, possibleWords, direction) {
 	// Takes a square
 	// Puts letters in one direction away from it
 	// Returns array
-};
+	if (direction === "h") {
+		var restrictions = [0, 0, 0, 0, 0, 0, 0];
+	}
+	if (direction == "c") {
+	}
+}
+
+
+function check(r, c, board, direction) {
+	if (direction == 'h') {
+		while (board[r][c] != '' && c >= 0) {
+			c--;
+		}
+		c += board[r][c] == '';
+		var w = "";
+		while (board[r][c] != '') {
+			w = w + board[r][c];
+		}
+
+	}
+	if (direction == 'v') {
+		while (board[r][c] != '' && r >= 0) {
+			r--;
+		}
+	}
+}
+
+function _wordArrayHelper(r, c, word, board, tiles, dir) {
+	if (dir == "h") {
+		if (board[r][c] != "") {
+			return _wordArrayHelper(r, c + 1, word + board[r][c], board, tiles, dir);
+		}
+	}
+	if (dir == "c") {
+	}
+}

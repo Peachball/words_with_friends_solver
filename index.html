@@ -9,7 +9,6 @@
 		<!-- Vue JS -->
 		<script src="https://unpkg.com/vue"></script>
 		<script src="bundle.js"></script>
-		<script src="index.js"></script>
 	</head>
 
 	<body>
@@ -21,7 +20,6 @@
 						<input v-model="board[rindex][cindex]" type="text" class="sqr"
 								 v-bind:class="{empty: board[rindex][cindex].length == 0}"
 								 v-bind:readonly="readOnlyMode"></input>
-
 					</th>
 				</tr>
 			</table>
