@@ -1,18 +1,14 @@
 const RACK_SIZE = 7;
 const BOARD_SIZE = 11;
 const WORD_LOCATION = "words.txt";
-
-<<<<<<< HEAD
 $(document).ready(function(){
 	$(".sqr, .rack").change(function(e){
 		console.log(this.value);
 		this.value = this.value.toUpperCase();
 	});
 });
-=======
-var check_word = require('check-word'),
-	words = check_word('en');
->>>>>>> Peachball/master
+/*var check_word = require('check-word'),
+	words = check_word('en');*/
 
 document.addEventListener('DOMContentLoaded', function() {
 	var app = new Vue({
