@@ -3,7 +3,17 @@ const BOARD_SIZE = 11;
 const WORD_LOCATION = "words.txt";
 
 var trie = require('trie-prefix-tree');
-var dict = trie();
+var dict = null;
+
+(function() {
+	$.get({
+		url: 'words.txt',
+		success: function(data) {
+			dict = trie(data.split('\n'));
+		},
+		async: true
+	});
+})();
 
 document.addEventListener('DOMContentLoaded', function() {
 	var app = new Vue({
@@ -17,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						tb[i].push("");
 					}
 				}
+				tb[5][5] = 'a';
+				tb[5][6] = 's';
 				return tb;
 			}(),
 			rack: function() {
@@ -24,13 +36,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				for (var i = 0; i < RACK_SIZE; i++) {
 					r.push("");
 				}
+				r = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 				return r;
 			}(),
 			error: "",
-			readOnlyMode: false
+			readOnlyMode: false,
+			status: ""
 		},
 		methods: {
 			solve: function() {
+				if (dict == null) {
+					alert("Dict not done loading yet...");
+				}
 				// Verify inputs
 				for (var i = 0; i < RACK_SIZE; i++) {
 					if (this.rack[i].length != 1) {
@@ -84,19 +101,14 @@ function wordChecker(boardArray, tilesArray) {
 	for (var r = 0 ; r < boardArray.length ; r++) {
 		for (var c = 0 ; c < boardArray[0].length ; c++) {
 			var possibility = possibilityChecker(r, c, boardArray);
-			var possibleWords = [];
+			var word = [];
 			if (possibility.horizontal) {
-				buildAWordArray(r, c, boardArray, tilesArray, possibleWords,
+				buildAWordArray(r, c, boardArray, tilesArray, word,
 					"h");
 			}
 			if (possibility.vertical) {
-				buildAWordArray(r, c, boardArray, tilesArray, possibleWords,
+				buildAWordArray(r, c, boardArray, tilesArray, word,
 					"v");
-			}
-			for (var i = 0 ; i < setOfWords.length ; i++) {
-				if (words.check(setOfWords[i])) {
-					console.log(setOfWords[i] + " is playable");
-				}
 			}
 		}
 	}
@@ -106,13 +118,13 @@ function possibilityChecker(r, c, boardArray) {
 	var R = boardArray.length;
 	var W = boardArray[0].length;
 	var p = {horizontal: false, vertical: false};
-	for (var dr = 0; dr + r < R && dr < 7; r++) {
+	for (var dr = 0; dr + r < R && dr < 7; dr++) {
 		if (boardArray[r + dr][c] != '') {
 			p.horizontal = true;
 			break;
 		}
 	}
-	for (var dc = 0; dc + c < W; c++) {
+	for (var dc = 0; dc + c < W; dc++) {
 		if (boardArray[r][c + dc] != '') {
 			p.vertical = true;
 			break;
@@ -121,47 +133,171 @@ function possibilityChecker(r, c, boardArray) {
 	return p;
 }
 
-function offBoardTileCheck(x , y) {
-	if (y - 1 < 0) {
-		return true;
-	} else if (y + 1 > boardArray.length) {
-		return true;
-	} else if (x - 1 < 0) {
-		return true;
-	} else if (x + 1 > boardArray[0].length) {
-		return true;
+function inBounds(c, r, board) {
+	if (r < 0) {
+		return false;
+	} else if (r >= board.length) {
+		return false;
+	} else if (c < 0) {
+		return false;
+	} else if (c >= board[0].length) {
+		return false;
 	}
+	return true;
 }
 
 
-function buildAWordArray(r, c, boardArray, tilesArray, possibleWords, direction) {
+function buildAWordArray(r, c, board, tiles, curWord, dir, touched) {
 	// Takes a square
 	// Puts letters in one direction away from it
 	// Returns array
-	if (direction === "h") {
-		var restrictions = [0, 0, 0, 0, 0, 0, 0];
+	if (touched) {
+		checkPlay(r, c, board, dir);
 	}
-	if (direction == "c") {
+	if (tiles.length == 0) {
+		return;
+	}
+	if (!dict.isPrefix(curWord.join(""))) {
+		return;
+	}
+	var dr = [1, 0],
+		dc = [0, 1];
+	if (dir == "h") {
+		dr.push(-1);
+		dc.push(0);
+	}
+	if (dir == "v") {
+		dr.push(0);
+		dc.push(-1);
+	}
+	for (var i = 0; i < dr.length; i++) {
+		var nr = dr[i] + r,
+			nc = dc[i] + c;
+		if (!inBounds(nr, nc, board)) {
+			continue;
+		}
+		if (board[nr][nc] != "") {
+			touched = true;
+			break;
+		}
+	}
+	for (var i = 0; i < tiles.length; i++) {
+		var char = tiles[i];
+		board[r][c] = char
+		tiles.splice(i, 1);
+		curWord.push(char);
+		if (dir == 'h') {
+			buildAWordArray(r, c+1, board, tiles, curWord, dir, touched);
+		}
+		else {
+			buildAWordArray(r+1, c, board, tiles, curWord, dir, touched);
+		}
+		curWord.pop();
+		tiles.splice(i, 0, c);
 	}
 }
 
 
-function check(r, c, board, direction) {
-	if (direction == 'h') {
-		while (board[r][c] != '' && c >= 0) {
+/*
+ * Checks if the word under curosr is a legitimate play
+ */
+function checkPlay(r, c, board, dir) {
+	if (dir == 'h') {
+		while (c >= 0 && board[r][c] != '') {
 			c--;
 		}
 		c += board[r][c] == '';
-		var w = "";
+		if (!checkWord(r, c, board, dir)) { // Check if played word is legit
+			return false;
+		}
 		while (board[r][c] != '') {
+			// Check above and below
+			if (r > 0) {
+				if (board[r - 1][c] != '') {
+					if (!checkWord(r - 1, c, board, 'v')) {
+						return false;
+					}
+				}
+			}
+			if (r + 1 < board.length) {
+				if (board[r + 1][c] != '') {
+					if (!checkWord(r + 1, c, board, 'v')) {
+						return false;
+					}
+				}
+			}
+		}
+		var w = '';
+		while (c < board[0].length && board[r][c] != "") {
 			w = w + board[r][c];
 		}
-
+		console.log(w);
+		return true;
 	}
-	if (direction == 'v') {
+	if (dir == 'v') {
 		while (board[r][c] != '' && r >= 0) {
 			r--;
 		}
+		r += board[r][c] == '';
+		while (board[r][c] != '') {
+			// Check left and right
+			if (c > 0) {
+				if (board[r][c - 1] != '') {
+					if (!checkWord(r, c - 1, board, 'h')) {
+						return false;
+					}
+				}
+			}
+			if (c + 1 < board[0].length) {
+				if (board[r][c + 1] != '') {
+					if (!checkWord(r, c + 1, board, 'h')) {
+						return false;
+					}
+				}
+			}
+		}
+		var w = '';
+		while (c < board[0].length && board[r][c] != "") {
+			w = w + board[r][c];
+		}
+		console.log(w);
+		return true;
+	}
+}
+
+/*
+ * Checks if the word at the position in the direction is viable
+ */
+function checkWord(r, c, board, dir) {
+	if (dir == 'h') { // Horizontal
+		while (c >= 0 && board[r][c] != '') {
+			c--;
+		}
+		c += board[r][c] == '';
+		var word = "";
+		while (c < board[0].length && board[r][c] != "") {
+			word = word + board[r][c];
+			if (dict.isPrefix(word)) {
+				return false;
+			}
+			c++;
+		}
+		return true;
+	}
+	if (dir == 'v') { // Vertical
+		while (r >= 0 && board[r][c] != '') {
+			r--;
+		}
+		r += board[r][c] == '';
+		var word = "";
+		while (r < board.length && board[r][c] != "") {
+			word = word + board[r][c];
+			if (dict.isPrefix(word)) {
+				return false;
+			}
+			r++;
+		}
+		return true;
 	}
 }
 
