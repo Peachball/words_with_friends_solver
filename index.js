@@ -15,6 +15,13 @@ var dict = null;
 	});
 })();
 
+$(document).ready(function(){
+	$(".sqr, .rack").change(function(e){
+		console.log(this.value);
+		this.value = this.value.toUpperCase();
+	});
+});
+
 document.addEventListener('DOMContentLoaded', function() {
 	var app = new Vue({
 		el: '#app',
