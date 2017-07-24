@@ -2,12 +2,17 @@ const RACK_SIZE = 7;
 const BOARD_SIZE = 11;
 const WORD_LOCATION = "words.txt";
 
+<<<<<<< HEAD
 $(document).ready(function(){
 	$(".sqr, .rack").change(function(e){
 		console.log(this.value);
 		this.value = this.value.toUpperCase();
 	});
 });
+=======
+var check_word = require('check-word'),
+	words = check_word('en');
+>>>>>>> Peachball/master
 
 document.addEventListener('DOMContentLoaded', function() {
 	var app = new Vue({
@@ -31,18 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				return r;
 			}(),
 			error: "",
-			readOnlyMode: false,
-			wordlist: function() {
-				var output = "hi";
-				$.get({
-					url: 'words.txt',
-					success: function(data) {
-						output = data;
-					},
-					async: false
-				});
-				return output;
-			}()
+			readOnlyMode: false
 		},
 		methods: {
 			solve: function() {
@@ -81,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				// beginning of solving process
 				this.readOnlyMode = true;
-				wordChecker(this.wordlist, this.board, this.rack);
+				wordChecker(this.board, this.rack);
 			},
 			clearSolve: function() {
 				this.readOnlyMode = false;
@@ -95,29 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-function checkIfWordExists(word, wordArray) {
-	var l = 0, h = wordArray.length - 1;
-	while (l <= h) {
-		var m = (h + l) / 2;
-		var tempWord = wordArray[m];
-		if (tempWord === word) {
-			return true;
-		}
-		else if (tempWord < word) {
-			l = m + 1;
-		}
-		else {
-			h = m - 1;
-		}
-	}
-	return false;
-}
-
-
-
-
-function wordChecker(wordArray , boardArray , tilesArray) {
+function wordChecker(boardArray, tilesArray) {
 	for (var y = 0 ; y < boardArray.length ; y++) {
 		for (var x = 0 ; x < boardArray[0].length ; x++) {
 			var square = {
@@ -130,7 +102,9 @@ function wordChecker(wordArray , boardArray , tilesArray) {
 				var setOfWords = buildAWordArray(square , boardArray , tilesArray);
 			}
 			for (var i = 0 ; i < setOfWords.length ; i++) {
-				console.log(checkIfWordExists(setOfWords[i] , wordArray));
+				if (words.check(setOfWords[i])) {
+					console.log(setOfWords[i] + " is playable");
+				}
 			}
 		}
 	}
