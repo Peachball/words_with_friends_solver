@@ -19,7 +19,7 @@
 					<th v-for="(c, cindex) in row">
 						<input v-model="board[rindex][cindex]" type="text" class="sqr"
 								 v-bind:class="{empty: board[rindex][cindex].length == 0}"
-								 v-bind:readonly="readOnlyMode"></input>
+								 v-bind:readonly="readOnlyMode" maxlength="1"></input>
 
 					</th>
 				</tr>
@@ -29,14 +29,16 @@
 				<li v-for="(c, index) in rack" class="row">
 					<input v-model="rack[index]" type="text" class="rack"
 								v-bind:class="{empty: rack[index].length == 0}"
-								v-bind:readonly="readOnlyMode"></input>
+								v-bind:readonly="readOnlyMode" maxlength="1"></input>
 				</li>
 			</ul>
-
-			<button @click="solve()"> Solve! </button>
-			<button @click="clearSolve()"> Clear Solve </button>
-			<button @click="reset"> Reset Board </button>
-			<p class="error"> {{error}} </p>
+			<br />
+			<div>
+				<button @click="solve()"> Solve! </button>
+				<button @click="clearSolve()"> Clear Solve </button>
+				<button @click="reset"> Reset Board </button>
+				<p class="error"> {{error}} </p>
+			</div>
 		</div>
 	</body>
 </html>

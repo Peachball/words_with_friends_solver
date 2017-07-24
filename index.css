@@ -10,11 +10,14 @@
 	height: 30px;
 	width: 30px;
 	font-weight: normal;
+	font-size: 45px;
 }
+
 
 .rack {
 	width: 50px;
 	height: 50px;
+	font-size: 45px;
 }
 
 .error {
@@ -24,6 +27,8 @@
 button {
 	width: 70px;
 	height: 70px;
+	border-radius: 10px;
+	border: solid #bbada0;
 }
 
 ul {
@@ -31,5 +36,12 @@ ul {
 }
 
 .empty {
-	background: black;
+	background: rgba(238, 228, 218, 0.35);
+}
+
+body {
+	background: #faf8ef;
+	color: #776e65;
+	font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+	font-size: 18px;
 }
